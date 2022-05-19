@@ -1,11 +1,18 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 
 from app.models import qualifications as models
 from app.schemas import qualifications as schemas
 
 
-def get_qualifications(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Qualification).offset(skip).limit(limit).all()
+def get_qualifications(db: Session, skip: int = 0, limit: int = 100,
+                       album_id: int = None):
+    query = db.query(models.Qualification)
+
+    if album_id is not None:
+        query = query.filter_by(album_id = album_id)
+
+    return query.offset(skip).limit(limit).all()
 
 
 def get_qualification(db: Session, qualification_id: int):
@@ -42,3 +49,17 @@ def remove_qualification(db: Session, qualification_id: int):
     db.commit()
 
     return db_qualification
+
+
+def album_stats(db: Session, album_id: int):
+    return db.query(
+        func.count(models.Qualification.value)
+            .filter(models.Qualification.album_id == album_id)
+            .label("count"),
+        func.sum(models.Qualification.value)
+            .filter(models.Qualification.album_id == album_id)
+            .label("sum"),
+        func.avg(models.Qualification.value)
+            .filter(models.Qualification.album_id == album_id)
+            .label("avg")
+    ).one_or_none()

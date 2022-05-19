@@ -14,8 +14,9 @@ router = APIRouter(
 
 @router.get("/", response_model = list[schemas.Qualification])
 def get_qualifications(skip: int = 0, limit: int = 100,
-                       db: Session = Depends(get_db)):
-    qualis = crud.get_qualifications(db, skip = skip, limit = limit)
+                       album_id: int = None, db: Session = Depends(get_db)):
+    qualis = crud.get_qualifications(db, skip = skip, limit = limit,
+                                     album_id = album_id)
     return qualis
 
 
@@ -50,10 +51,32 @@ def edit_qualification(qualification_id: int,
 
 @router.delete("/{qualification_id}", response_model = schemas.Qualification,
                responses = {404: response_codes[404]})
-def remove_qualification(qualification_id, db: Session = Depends(get_db)):
+def remove_qualification(qualification_id: int, db: Session = Depends(get_db)):
     qualification = crud.remove_qualification(db, qualification_id)
     if qualification is None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
                             detail = "Qualification not found")
 
     return qualification
+
+
+@router.get("/stats/{album_id}", responses = {
+    200: {
+        "content": {
+            "application/json": {
+                "example": {
+                    "count": 2,
+                    "sum": 4,
+                    "avg": 2
+                }
+            }
+        }
+    }, 404: response_codes[404]})
+def album_stats(album_id: int, db: Session = Depends(get_db)):
+    total = crud.sum_by_album(db, album_id)
+
+    if total[0] is None:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
+                            detail = "No qualifications for that album")
+
+    return total

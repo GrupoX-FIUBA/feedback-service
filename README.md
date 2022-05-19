@@ -1,13 +1,6 @@
-# Template repository for FastAPI microservices
+# Feedback Microservice
 
-This is a template to use as a starting point for FastAPI microservice repositories. Once configured, it will run the tests on every pull request to `main`, and will automatically deploy to corresponding Heroku app when a push to `main` occurs.
-
-## To Do after fork/create-from-template
-
-- Simply go to the repository settings, _Actions secrets_ and create a new _repository secret_ with name `HEROKU_APP_NAME` and the name of the Heroku app in the _value_ field.
-- Then, replace in `.github/workflows/deploy.yml` the `HD_X_API_KEY` value for a specific microservice secret, and the other secrets if necessary.
-
-In the `app` directory there's a very simple example of a FastAPI app with tests.
+This microservices manages the feedback related topics (qualifications, comments, etc.).
 
 ## Local development
 

@@ -5,7 +5,7 @@ services:
     build:
       context: .
       target: production
-    container_name: SERVICE-fastapi
+    container_name: feedback-fastapi
     ports:
       - ${PORT:-8000}:${PORT:-8000}
     environment:
@@ -19,7 +19,7 @@ services:
     build:
       context: .
       target: development
-    container_name: SERVICE-development
+    container_name: feedback-development
     ports:
       - ${PORT:-8000}:${PORT:-8000}
     environment:
@@ -39,7 +39,7 @@ services:
     build:
       context: .
       target: test
-    container_name: SERVICE-test
+    container_name: feedback-test
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432"
     depends_on:
@@ -53,7 +53,7 @@ services:
 
   db:
     image: postgres:14-alpine
-    container_name: SERVICE-db
+    container_name: feedback-db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

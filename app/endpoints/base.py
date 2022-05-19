@@ -35,6 +35,14 @@ def get_api_key(
 
 
 response_codes = {
+    401: {
+        "description": "Unauthorized",
+        "content": {
+            "application/json": {
+                "example": {"detail": "string"}
+            }
+        }
+    },
     404: {
         "description": "Not Found",
         "content": {

@@ -3,7 +3,10 @@ from sqlalchemy import Column, Integer, String
 from app.db.base_class import Base
 
 
-class Example(Base):
+class Qualification(Base):
     id = Column(Integer, primary_key = True, index = True)
 
-    name = Column(String)
+    user_id = Column(String)
+    album_id = Column(Integer)
+
+    value = Column(Integer)

@@ -1,0 +1,17 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+name: CI
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run linter and tests
+        run: docker-compose --profile test up --exit-code-from test

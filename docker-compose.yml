@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  production:
+    build:
+      context: .
+      target: production
+    container_name: SERVICE-fastapi
+    ports:
+      - ${PORT:-8000}:${PORT:-8000}
+    environment:
+      - PORT=${PORT:-8000}
+      - DATABASE_URL
+      - X_API_KEY
+    profiles:
+      - prod
+
+  development:
+    build:
+      context: .
+      target: development
+    container_name: SERVICE-development
+    ports:
+      - ${PORT:-8000}:${PORT:-8000}
+    environment:
+      PORT: ${PORT:-8000}
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432"
+      DEBUG: 1
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app:/code/app
+      - ./alembic/versions:/code/alembic/versions
+    profiles:
+      - dev
+
+  test:
+    build:
+      context: .
+      target: test
+    container_name: SERVICE-test
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app:/code/app
+      - ./alembic/versions:/code/alembic/versions
+    profiles:
+      - test
+
+  db:
+    image: postgres:14-alpine
+    container_name: SERVICE-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "none"
+    volumes:
+      - ./psql_data:/var/lib/postgresql/data
+    profiles:
+      - dev
+      - test

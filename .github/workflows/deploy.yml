@@ -21,4 +21,4 @@ jobs:
           usedocker: true
         env:
           HD_COMPOSE_PROFILES: prod
-          HD_X_API_KEY: ${{ secrets.NAME_SERVICE_API_KEY }}
+          HD_X_API_KEY: ${{ secrets.FEEDBACK_SERVICE_API_KEY }}

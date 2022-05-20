@@ -21,23 +21,23 @@ def get_qualification(db: Session, qualification_id: int):
              .first()
 
 
-def create_qualification(db: Session,
-                         qualification: schemas.QualificationCreate):
-    db_qualification = models.Qualification(**qualification.dict())
-    db.add(db_qualification)
+def put_comment(db: Session, qualification: schemas.QualificationPut):
+    created = False
+    db_quali = db.query(models.Qualification).filter_by(
+        user_id = qualification.user_id,
+        album_id = qualification.album_id
+    ).first()
+
+    if db_quali is not None:
+        db_quali.value = qualification.value
+    else:
+        db_quali = models.Qualification(**qualification.dict())
+        db.add(db_quali)
+        created = True
+
     db.commit()
-    db.refresh(db_qualification)
-    return db_qualification
-
-
-def edit_qualification(db: Session, qualification: schemas.Qualification,
-                       updated_qualification: schemas.QualificationUpdate):
-    for key, value in updated_qualification.dict(exclude_unset=True).items():
-        setattr(qualification, key, value)
-
-    db.commit()
-    db.refresh(qualification)
-    return qualification
+    db.refresh(db_quali)
+    return db_quali, created
 
 
 def remove_qualification(db: Session, qualification_id: int):

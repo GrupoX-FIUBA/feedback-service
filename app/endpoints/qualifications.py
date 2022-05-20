@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.cruds import qualifications as crud
@@ -31,22 +31,25 @@ def get_qualification(qualification_id: int, db: Session = Depends(get_db)):
     return quali
 
 
-@router.post("/", response_model = schemas.Qualification,
-             status_code = status.HTTP_201_CREATED)
-def create_qualification(qualification: schemas.QualificationCreate,
-                         db: Session = Depends(get_db)):
-    return crud.create_qualification(db, qualification = qualification)
+@router.put("/", response_model = schemas.Qualification,
+            responses = {201: {
+                "description": "Created",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Qualification"
+                        }
+                    }
+                }
+            }}
+)
+def put_qualification(qualification: schemas.QualificationPut,
+                      response: Response, db: Session = Depends(get_db)):
+    qualification, created = crud.put_qualification(db, qualification)
+    if created:
+        response.status_code = status.HTTP_201_CREATED
 
-
-@router.patch("/{qualification_id}", response_model = schemas.Qualification,
-              responses = {404: response_codes[404]})
-def edit_qualification(qualification_id: int,
-                       qualification: schemas.QualificationUpdate,
-                       db: Session = Depends(get_db)):
-    db_qualification = get_qualification(qualification_id, db)
-
-    return crud.edit_qualification(db, qualification = db_qualification,
-                                   updated_qualification = qualification)
+    return qualification
 
 
 @router.delete("/{qualification_id}", response_model = schemas.Qualification,

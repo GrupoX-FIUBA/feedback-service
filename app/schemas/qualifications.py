@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel
 
 
@@ -10,12 +8,8 @@ class QualificationBase(BaseModel):
     value: int
 
 
-class QualificationCreate(QualificationBase):
+class QualificationPut(QualificationBase):
     pass
-
-
-class QualificationUpdate(QualificationBase):
-    value: Optional[int]
 
 
 class Qualification(QualificationBase):

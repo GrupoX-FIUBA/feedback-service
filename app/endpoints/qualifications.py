@@ -41,8 +41,7 @@ def get_qualification(qualification_id: int, db: Session = Depends(get_db)):
                         }
                     }
                 }
-            }}
-)
+            }})
 def put_qualification(qualification: schemas.QualificationPut,
                       response: Response, db: Session = Depends(get_db)):
     qualification, created = crud.put_qualification(db, qualification)

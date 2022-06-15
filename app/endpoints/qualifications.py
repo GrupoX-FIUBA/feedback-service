@@ -75,7 +75,7 @@ def remove_qualification(qualification_id: int, db: Session = Depends(get_db)):
         }
     }, 404: response_codes[404]})
 def album_stats(album_id: int, db: Session = Depends(get_db)):
-    total = crud.sum_by_album(db, album_id)
+    total = crud.album_stats(db, album_id)
 
     if total[0] is None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,

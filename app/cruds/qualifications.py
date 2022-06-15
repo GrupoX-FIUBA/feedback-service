@@ -21,7 +21,7 @@ def get_qualification(db: Session, qualification_id: int):
              .first()
 
 
-def put_comment(db: Session, qualification: schemas.QualificationPut):
+def put_qualification(db: Session, qualification: schemas.QualificationPut):
     created = False
     db_quali = db.query(models.Qualification).filter_by(
         user_id = qualification.user_id,

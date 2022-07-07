@@ -22,7 +22,7 @@ def override_get_db():
         db.close()
 
 
-app.dependecy_overrides[get_db] = override_get_db
+app.dependency_overrides[get_db] = override_get_db
 
 
 def get_valid_api_key():

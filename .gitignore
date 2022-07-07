@@ -7,4 +7,3 @@ __pycache__/
 
 psql_data/
 coverage/
-db/

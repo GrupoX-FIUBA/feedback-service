@@ -48,6 +48,7 @@ services:
     volumes:
       - ./app:/code/app
       - ./alembic/versions:/code/alembic/versions
+      - ./coverage:/code/coverage
     profiles:
       - test
 

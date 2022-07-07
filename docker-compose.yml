@@ -8,12 +8,25 @@ services:
     container_name: feedback-fastapi
     ports:
       - ${PORT:-8000}:${PORT:-8000}
+      - "8125:8125/udp" # DD
+      - "8126:8126/tcp" # DD
     environment:
       - PORT=${PORT:-8000}
       - DATABASE_URL
       - X_API_KEY
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=datadoghq.com
+      - DD_DYNO_HOST=true
+      - DD_APM_ENABLED=true
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
     profiles:
       - prod
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /proc/:/host/proc/:ro
+     - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
 
   development:
     build:

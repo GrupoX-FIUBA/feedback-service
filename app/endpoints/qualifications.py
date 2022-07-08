@@ -77,7 +77,7 @@ def remove_qualification(qualification_id: int, db: Session = Depends(get_db)):
 def album_stats(album_id: int, db: Session = Depends(get_db)):
     total = crud.album_stats(db, album_id)
 
-    if total[0] is None:
+    if total[0] == 0:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
                             detail = "No qualifications for that album")
 

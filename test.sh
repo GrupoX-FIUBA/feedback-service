@@ -31,4 +31,6 @@ if [ "$FLAKE_CODE" -ne "0" -o "$PYTEST_CODE" -ne "0" ]; then
 	exit 1
 fi
 
+pytest --cov app/ --cov-report=xml:coverage/coverage.xml >/dev/null
+
 exit 0

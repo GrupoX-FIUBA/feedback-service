@@ -37,7 +37,7 @@ services:
       - ${PORT:-8000}:${PORT:-8000}
     environment:
       PORT: ${PORT:-8000}
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432"
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/development"
       DEBUG: 1
     depends_on:
       db:
@@ -54,13 +54,14 @@ services:
       target: test
     container_name: feedback-test
     environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432"
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/testdb"
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - ./app:/code/app
       - ./alembic/versions:/code/alembic/versions
+      - ./coverage:/code/coverage
     profiles:
       - test
 
@@ -79,6 +80,7 @@ services:
       driver: "none"
     volumes:
       - ./psql_data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d/
     profiles:
       - dev
       - test

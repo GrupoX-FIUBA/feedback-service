@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/GrupoX-FIUBA/feedback-service/branch/main/graph/badge.svg?token=7P0G9IGPP6)](https://codecov.io/gh/GrupoX-FIUBA/feedback-service)
+
 # Feedback Microservice
 
 This microservices manages the feedback related topics (qualifications, comments, etc.).

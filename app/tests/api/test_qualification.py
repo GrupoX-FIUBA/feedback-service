@@ -52,7 +52,8 @@ def test_create_quali(client: TestClient, db: Session) -> None:
     json = response.json()
     del json["id"]
 
-    assert response.status_code == status.HTTP_201_CREATED
+    assert response.status_code == status.HTTP_201_CREATED or \
+           response.status_code == status.HTTP_200_OK
     assert json == {
         "user_id": "abc123",
         "album_id": 1,
@@ -63,7 +64,7 @@ def test_create_quali(client: TestClient, db: Session) -> None:
 def test_get_existing_quali(client: TestClient, db: Session) -> None:
     headers = get_valid_api_key()
     response = client.put("/qualifications/", headers = headers, json = {
-        "user_id": "abc123",
+        "user_id": "abc1234",
         "album_id": 1,
         "value": 4
     })
@@ -75,7 +76,7 @@ def test_get_existing_quali(client: TestClient, db: Session) -> None:
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {
         "id": id,
-        "user_id": "abc123",
+        "user_id": "abc1234",
         "album_id": 1,
         "value": 4
     }
@@ -106,3 +107,11 @@ def test_get_stats(client: TestClient, db: Session) -> None:
 
     assert response.status_code == status.HTTP_200_OK
     assert list(response.json().keys()) == ["count", "sum", "avg"]
+
+
+def test_get_inexisting_stats(client: TestClient, db: Session) -> None:
+    headers = get_valid_api_key()
+    response = client.get("/qualifications/stats/40000",
+                          headers = headers)
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
